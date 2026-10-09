@@ -59,7 +59,7 @@ Lab/
 └── reports/                  báo cáo sinh ra (bạn commit vào repo nộp)
 ```
 
-Mỗi tệp "SINH VIÊN CÀI ĐẶT" là **pseudo-code chạy được** (import được): các hàm có docstring mô tả việc cần làm, các `TODO n` đánh số theo `GUIDE.md`, thân hàm đang `raise NotImplementedError`.
+Các tệp "SINH VIÊN CÀI ĐẶT" đã được triển khai. Chạy `python -m unittest -q test_lab.py` để kiểm tra phần logic không cần mạng.
 
 ## 4. Cài đặt
 
@@ -68,6 +68,8 @@ python3 -m venv .venv && source .venv/bin/activate      # Python 3.11+
 pip install -r requirements.txt
 cp .env.example .env                                     # rồi điền khóa CỦA BẠN
 ```
+
+Trên Windows, mở **Docker Desktop** từ Start và chờ dòng **Engine running**. Kiểm tra bằng `docker info` trong PowerShell, đặt `SANDBOX=docker` trong `.env`, rồi chạy `python research.py "survey about world model"`. Nếu dùng Google Gemini, đặt `LAB_MODEL=google_genai:<model-id>` và `GOOGLE_API_KEY`; giới hạn gọi mô hình mặc định là 4 lần/phút, có thể đổi bằng `LAB_REQUESTS_PER_MINUTE` theo quota của dự án. Mỗi báo cáo cần nhiều lượt gọi LLM; nếu dự án bị giới hạn 20 lượt/ngày thì quota đó không đủ để chạy hết lab.
 
 Bạn cần ba loại khóa (điền vào `.env`, **không bao giờ commit** `.env`):
 

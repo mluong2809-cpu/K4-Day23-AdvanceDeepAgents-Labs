@@ -1,5 +1,6 @@
 deepagents==0.7.21
 langchain-openai==1.6.7
+langchain-google-genai==4.4.0
 langchain-daytona==0.0.8
 daytona==0.223.0
 httpx==0.28.1

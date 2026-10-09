@@ -13,6 +13,8 @@ from collections import Counter
 from pathlib import Path
 from tempfile import NamedTemporaryFile
 
+from langchain_core.rate_limiters import InMemoryRateLimiter
+
 from agents import FINALIZER_PATH, REPORT_PATH, SOURCES_PATH, VALIDATOR_PATH, WORKDIR, build_lead_agent
 from check_citations import check
 from model import make_model
@@ -148,6 +150,14 @@ def main(topic):
     try:
         model = make_model()
         model_name = os.getenv("LAB_MODEL") or os.getenv("OPENAI_DEPLOYMENT_MODEL") or str(model)
+        # One limiter on the shared model serializes lead and parallel subagent calls.
+        # Google's free tier can be as low as five requests per minute.
+        rpm = os.getenv("LAB_REQUESTS_PER_MINUTE")
+        if rpm is None and model_name.startswith("google_genai:"):
+            rpm = "4"
+        if rpm and float(rpm) > 0:
+            model.rate_limiter = InMemoryRateLimiter(requests_per_second=float(rpm) / 60,
+                                                     check_every_n_seconds=0.2, max_bucket_size=1)
         with open_sandbox() as backend:
             setup = backend.execute(f"mkdir -p {WORKDIR}/research/notes {WORKDIR}/report")
             if setup.exit_code != 0:
